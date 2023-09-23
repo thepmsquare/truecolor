@@ -1,4 +1,4 @@
-# hidden
+# truecolor
 
 ## about
 
