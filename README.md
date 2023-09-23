@@ -1,15 +1,27 @@
-# guess-color-game-react
+# hidden
 
-A small game made with ReactJS. Guess the color based on a hexcode.
+## about
 
-![](guess-color-game-react.gif)
+## video
 
-To check out the project...
+## configs
 
-> Clone / Download zip
+1. gatsby-config.ts
+2. config.ts
 
-> run "npm install" (will require node and npm)
+## env
 
-> run "npm start"
+1. node js - v18.18.0
+2. npm - v9.8.1
 
-Feedback is appreciated. Thank you!
+## changelog
+
+### v2
+
+- migrate to mui, gatsby and typescript.
+
+### v1
+
+- initial implementation.
+
+## Feedback is appreciated. Thank you!
