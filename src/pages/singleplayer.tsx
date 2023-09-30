@@ -26,7 +26,9 @@ const SinglePlayer: FC<PageProps> = (props) => {
   const propsHints: number = propsState?.hints;
   const propsNumLives: number = propsState?.numLives;
   if (!propsHints || !propsNumColors || !propsNumLives) {
-    navigate("/");
+    if (isBrowser) {
+      navigate("/");
+    }
     return "";
   }
 
