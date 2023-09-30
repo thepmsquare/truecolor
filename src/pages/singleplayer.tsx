@@ -1,17 +1,6 @@
-import React, { FC, useState, StrictMode } from "react";
-import type { HeadFC, PageProps } from "gatsby";
-import {
-  Button,
-  Card,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  StyledEngineProvider,
-  Typography,
-} from "@mui/material";
+import React, { FC, useState, StrictMode, useEffect } from "react";
+import { navigate, type HeadFC, type PageProps } from "gatsby";
+import { Button, Card, StyledEngineProvider, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ColorResult, GithubPicker } from "react-color";
 import config from "../../config";
@@ -28,9 +17,19 @@ import "@fontsource/roboto/700.css";
 
 const isBrowser = typeof window !== "undefined";
 
-export const Head: HeadFC = () => <title>truecolor</title>;
+export const Head: HeadFC = () => <title>{config.appName}</title>;
 
-const SinglePlayer: FC<PageProps> = () => {
+const SinglePlayer: FC<PageProps> = (props) => {
+  // get stuff from props
+  const propsState: any = props.location.state;
+  const propsNumColors: number = propsState?.numColors;
+  const propsHints: number = propsState?.hints;
+  const propsNumLives: number = propsState?.numLives;
+  if (!propsHints || !propsNumColors || !propsNumLives) {
+    navigate("/");
+    return "";
+  }
+
   // get stuff from local storage
   let localStorageTheme;
   if (isBrowser) {
@@ -56,22 +55,19 @@ const SinglePlayer: FC<PageProps> = () => {
       severity: "error",
     });
   // game states ========
-  const [selectedDifficulty, changeSelectedDifficulty] = useState<
-    "easy" | "hard"
-  >("easy");
+  const [numCurrentLives, changeNumCurrentLives] = useState(propsNumLives);
   const [allColors, changeAllColors] = useState<Color[]>([]);
   const [correctColor, changeCorrectColor] = useState<Color>({
     id: -1,
     color: "",
   });
   const [selectedColorId, changeSelectedColorId] = useState(-1);
-  const [numRounds, changeNumRounds] = useState(10);
-  const [currentRound, changeCurrentRound] = useState(0);
-  const [score, changeScore] = useState(0);
+  const [currentRound, changeCurrentRound] = useState(1);
   const [gameOver, changeGameOver] = useState(false);
-  const [start, changeStart] = useState(false);
   const [submited, changeSubmited] = useState(false);
-  const [backgroundColor, changeBackgroundColor] = useState("");
+  const [backgroundColor, changeBackgroundColor] = useState(
+    defaultThemeState === "dark" ? "black" : "white"
+  );
   const [feedbackMessage, changeFeedbackMessage] = useState("");
   // ========
 
@@ -81,6 +77,9 @@ const SinglePlayer: FC<PageProps> = () => {
     changeThemeState(newThemeState);
     if (isBrowser) {
       window.localStorage.setItem("theme", newThemeState);
+    }
+    if (currentRound === 1 && !submited) {
+      changeBackgroundColor(newThemeState === "dark" ? "black" : "white");
     }
   };
 
@@ -96,17 +95,16 @@ const SinglePlayer: FC<PageProps> = () => {
 
   const updateColors = () => {
     const allColors = [];
-    let numColors = selectedDifficulty === "easy" ? 3 : 6;
     // to prevent duplicate colors in same question.
     let i = 0;
-    while (i < numColors) {
+    while (i < propsNumColors) {
       let newHex = generateHex();
       if (!allColors.map((ele) => ele.color).includes(newHex)) {
         allColors.push({ id: i, color: generateHex() });
         i++;
       }
     }
-    let correctColor = allColors[Math.floor(Math.random() * numColors)];
+    let correctColor = allColors[Math.floor(Math.random() * propsNumColors)];
     changeAllColors(allColors);
     changeCorrectColor(correctColor);
   };
@@ -115,7 +113,6 @@ const SinglePlayer: FC<PageProps> = () => {
     let targetColor = allColors.find(
       (ele) => ele.color === colorResult.hex.toUpperCase()
     );
-
     if (targetColor) {
       changeSelectedColorId(targetColor.id);
     } else {
@@ -124,7 +121,8 @@ const SinglePlayer: FC<PageProps> = () => {
   };
 
   const handleSkip = () => {
-    if (currentRound < numRounds) {
+    if (numCurrentLives > 1) {
+      changeNumCurrentLives((oldLives) => oldLives - 1);
       changeSelectedColorId(-1);
       changeSubmited(false);
       changeCurrentRound((oldRound) => oldRound + 1);
@@ -132,63 +130,44 @@ const SinglePlayer: FC<PageProps> = () => {
       changeBackgroundColor(correctColor.color);
     } else {
       changeGameOver(true);
-      changeStart(false);
     }
   };
 
   const handleNext = () => {
-    if (currentRound < numRounds) {
+    if (numCurrentLives > 0) {
       changeSelectedColorId(-1);
       changeSubmited(false);
       changeCurrentRound((oldRound) => oldRound + 1);
       updateColors();
     } else {
       changeGameOver(true);
-      changeStart(false);
     }
-  };
-
-  const handleGameEnd = () => {
-    changeSelectedDifficulty("easy");
-    changeAllColors([]);
-    changeCorrectColor({ id: -1, color: "" });
-    changeBackgroundColor("#FFFFFF");
-    changeStart(false);
-    changeSelectedColorId(-1);
-    changeSubmited(false);
-    changeNumRounds(10);
-    changeCurrentRound(0);
-    changeScore(0);
-    changeGameOver(false);
-  };
-
-  const handleDropdownChange = (e: SelectChangeEvent) => {
-    let newValue = e.target.value;
-    if (newValue === "easy" || newValue === "hard") {
-      changeSelectedDifficulty(newValue);
-    } else {
-      throw Error("unexpected error.");
-    }
-  };
-
-  const startGame = () => {
-    changeStart(true);
-    changeCurrentRound(1);
-    updateColors();
   };
 
   const handleSubmit = () => {
     if (selectedColorId === correctColor.id) {
       changeFeedbackMessage("correct");
       changeSubmited(true);
-      changeScore((oldScore) => oldScore + 1);
     } else {
+      changeNumCurrentLives((oldLives) => oldLives - 1);
       changeFeedbackMessage("wrong");
       changeSubmited(true);
-      changeSelectedColorId(correctColor.id);
     }
     changeBackgroundColor(correctColor.color);
   };
+
+  //useEffect
+  useEffect(() => {
+    // will do once when page is refresh not on consecutive state loads
+    updateColors();
+  }, []);
+
+  useEffect(() => {
+    // will do once when game is over
+    if (gameOver) {
+      navigate("/");
+    }
+  }, [gameOver]);
 
   // misc
   let currentTheme = createTheme({
@@ -204,84 +183,47 @@ const SinglePlayer: FC<PageProps> = () => {
     <StrictMode>
       <ThemeProvider theme={currentTheme}>
         <StyledEngineProvider injectFirst>
-          <Card className="main" square>
-            <div className="inside-main">
-              <div className="Game">
-                <Typography variant="h1">Can you guess the color?</Typography>
-                <Divider />
-                {!start && !gameOver && (
-                  <div className="Game-one">
-                    <FormControl fullWidth>
-                      <InputLabel id="difficulty-select-label">
-                        Select difficulty
-                      </InputLabel>
-                      <Select
-                        labelId="difficulty-select-label"
-                        value={selectedDifficulty}
-                        label="Select difficulty"
-                        onChange={handleDropdownChange}
-                        disabled={start}
-                      >
-                        <MenuItem value="easy">Easy</MenuItem>
-                        <MenuItem value="hard">Hard</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <Button onClick={startGame}>Start</Button>
-                  </div>
-                )}
-                {start && (
-                  <div className="Game-two">
-                    <Typography variant="body1">
-                      Round {currentRound}/{numRounds}
-                    </Typography>
-                    <Typography variant="h1">{correctColor.color}</Typography>
-                    <GithubPicker
-                      color={
-                        allColors.find((ele) => ele.id === selectedColorId)
-                          ?.color
-                      }
-                      colors={allColors.map((ele) => ele.color)}
-                      width="3"
-                      triangle="hide"
-                      onChange={handleColorSelect}
-                      //  TODO: disabled
-                    />
+          <div className="main" style={{ backgroundColor: backgroundColor }}>
+            <Card className="inside-main">
+              <Typography variant="body1">Round {currentRound}</Typography>
+              <Typography variant="body1">
+                Lives: {numCurrentLives}/{propsNumLives}
+              </Typography>
 
-                    {!submited ? (
-                      <div className="Game-two-buttonSet">
-                        <Button onClick={handleSkip}>Skip</Button>
-                        <Button
-                          onClick={handleSubmit}
-                          disabled={selectedColorId === -1}
-                        >
-                          Submit
-                        </Button>
-                      </div>
-                    ) : (
-                      <div>
-                        <Typography variant="h4" component="h4">
-                          {feedbackMessage}
-                        </Typography>
-                        <Button onClick={handleNext}>Next</Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {gameOver && (
-                  <div className="Game-three">
-                    <Typography variant="h2">
-                      Your Score is {score}/{numRounds}.
-                    </Typography>
-                    <Button onClick={handleGameEnd}>Go To Main Screen</Button>
-                  </div>
-                )}
-              </div>
+              <Typography variant="h1">{correctColor.color}</Typography>
+              <GithubPicker
+                color={
+                  allColors.find((ele) => ele.id === selectedColorId)?.color
+                }
+                colors={allColors.map((ele) => ele.color)}
+                width="3"
+                triangle="hide"
+                onChange={handleColorSelect}
+              />
+
+              {!submited ? (
+                <div className="Game-two-buttonSet">
+                  <Button onClick={handleSkip}>Skip</Button>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={selectedColorId === -1}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  <Typography variant="h2">{feedbackMessage}</Typography>
+                  <Button onClick={handleNext}>Next</Button>
+                </div>
+              )}
+
               <ThemeToggle
                 themeState={themeState}
                 customChangeThemeState={customChangeThemeState}
               />
-            </div>
-          </Card>
+            </Card>
+          </div>
           <CustomSnackbar
             snackbarState={snackbarState}
             changeSnackbarState={changeSnackbarState}

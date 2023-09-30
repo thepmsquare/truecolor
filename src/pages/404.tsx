@@ -15,7 +15,7 @@ import "@fontsource/roboto/700.css";
 
 const isBrowser = typeof window !== "undefined";
 
-export const Head: HeadFC = () => <title>truecolor</title>;
+export const Head: HeadFC = () => <title>{config.appName}</title>;
 
 const NotFoundPage: FC<PageProps> = (props) => {
   // get stuff from local storage
