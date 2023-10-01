@@ -1,6 +1,15 @@
 import React, { FC, useState, StrictMode, useEffect } from "react";
 import { navigate, type HeadFC, type PageProps } from "gatsby";
-import { Button, Card, StyledEngineProvider, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Grow,
+  StyledEngineProvider,
+  Typography,
+} from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ColorResult, GithubPicker } from "react-color";
 import config from "../../config";
@@ -14,6 +23,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -187,43 +197,80 @@ const SinglePlayer: FC<PageProps> = (props) => {
         <StyledEngineProvider injectFirst>
           <div className="main" style={{ backgroundColor: backgroundColor }}>
             <Card className="inside-main">
-              <Typography variant="body1">Round {currentRound}</Typography>
-              <Typography variant="body1">
-                Lives: {numCurrentLives}/{propsNumLives}
-              </Typography>
-
-              <Typography variant="h1">{correctColor.color}</Typography>
-              <GithubPicker
-                color={
-                  allColors.find((ele) => ele.id === selectedColorId)?.color
+              <CardHeader
+                title={`Round ${currentRound}`}
+                subheader={
+                  <>
+                    {[...Array(numCurrentLives).keys()].map((_, idx) => (
+                      <FavoriteIcon key={idx} color="error" />
+                    ))}
+                  </>
                 }
-                colors={allColors.map((ele) => ele.color)}
-                width="3"
-                triangle="hide"
-                onChange={handleColorSelect}
               />
+              <CardContent className="cardcontent">
+                <Typography variant="h2" component="h1">
+                  {correctColor.color}
+                </Typography>
+                {propsHints && (
+                  <div className="hints-container">
+                    <div
+                      style={{
+                        backgroundColor:
+                          "#" + correctColor.color.slice(1, 3) + "0000",
+                      }}
+                      className="hints-div"
+                    ></div>
+                    <div
+                      style={{
+                        backgroundColor:
+                          "#" + "00" + correctColor.color.slice(3, 5) + "00",
+                      }}
+                      className="hints-div"
+                    ></div>
+                    <div
+                      style={{
+                        backgroundColor:
+                          "#" + "0000" + correctColor.color.slice(5, 7),
+                      }}
+                      className="hints-div"
+                    ></div>
+                  </div>
+                )}
 
-              {!submited ? (
-                <div className="Game-two-buttonSet">
-                  <Button onClick={handleSkip}>Skip</Button>
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={selectedColorId === -1}
-                  >
-                    Submit
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  <Typography variant="h2">{feedbackMessage}</Typography>
+                <GithubPicker
+                  color={
+                    allColors.find((ele) => ele.id === selectedColorId)?.color
+                  }
+                  colors={allColors.map((ele) => ele.color)}
+                  width="3"
+                  triangle="hide"
+                  onChange={handleColorSelect}
+                />
+                {submited && (
+                  <Typography variant="h3" component="h2">
+                    {feedbackMessage}
+                  </Typography>
+                )}
+                <ThemeToggle
+                  themeState={themeState}
+                  customChangeThemeState={customChangeThemeState}
+                />
+              </CardContent>
+              <CardActions className="cardactions">
+                {!submited ? (
+                  <>
+                    <Button onClick={handleSkip}>Skip</Button>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={selectedColorId === -1}
+                    >
+                      Submit
+                    </Button>
+                  </>
+                ) : (
                   <Button onClick={handleNext}>Next</Button>
-                </div>
-              )}
-
-              <ThemeToggle
-                themeState={themeState}
-                customChangeThemeState={customChangeThemeState}
-              />
+                )}
+              </CardActions>
             </Card>
           </div>
           <CustomSnackbar

@@ -1,0 +1,8 @@
+.hints-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+.hints-div {
+  width: 2rem;
+  height: 2rem;
+}
