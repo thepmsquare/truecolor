@@ -6,12 +6,17 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Grow,
+  Divider,
   StyledEngineProvider,
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { ColorResult, GithubPicker } from "react-color";
+import {
+  ColorResult,
+  GithubPicker,
+  TwitterPicker,
+  CirclePicker,
+} from "react-color";
 import config from "../../config";
 import ThemeToggle from "../components/ThemeToggle";
 import CustomSnackbar from "../components/CustomSnackbar";
@@ -217,6 +222,10 @@ const SinglePlayer: FC<PageProps> = (props) => {
                       style={{
                         backgroundColor:
                           "#" + correctColor.color.slice(1, 3) + "0000",
+                        width: `${
+                          (parseInt(correctColor.color.slice(1, 3), 16) * 100) /
+                          255
+                        }%`,
                       }}
                       className="hints-div"
                     ></div>
@@ -224,6 +233,10 @@ const SinglePlayer: FC<PageProps> = (props) => {
                       style={{
                         backgroundColor:
                           "#" + "00" + correctColor.color.slice(3, 5) + "00",
+                        width: `${
+                          (parseInt(correctColor.color.slice(3, 5), 16) * 100) /
+                          255
+                        }%`,
                       }}
                       className="hints-div"
                     ></div>
@@ -231,19 +244,22 @@ const SinglePlayer: FC<PageProps> = (props) => {
                       style={{
                         backgroundColor:
                           "#" + "0000" + correctColor.color.slice(5, 7),
+                        width: `${
+                          (parseInt(correctColor.color.slice(5, 7), 16) * 100) /
+                          255
+                        }%`,
                       }}
                       className="hints-div"
                     ></div>
                   </div>
                 )}
-
-                <GithubPicker
+                <Divider />
+                <CirclePicker
                   color={
                     allColors.find((ele) => ele.id === selectedColorId)?.color
                   }
                   colors={allColors.map((ele) => ele.color)}
                   width="3"
-                  triangle="hide"
                   onChange={handleColorSelect}
                 />
                 {submited && (
