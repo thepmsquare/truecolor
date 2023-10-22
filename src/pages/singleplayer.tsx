@@ -11,12 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import {
-  ColorResult,
-  GithubPicker,
-  TwitterPicker,
-  CirclePicker,
-} from "react-color";
+import { ColorResult, CirclePicker } from "react-color";
 import config from "../../config";
 import ThemeToggle from "../components/ThemeToggle";
 import CustomSnackbar from "../components/CustomSnackbar";
