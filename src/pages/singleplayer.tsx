@@ -13,9 +13,8 @@ import {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ColorResult, CirclePicker } from "react-color";
 import config from "../../config";
-import ThemeToggle from "../components/ThemeToggle";
-import CustomSnackbar from "../components/CustomSnackbar";
-import type CustomSnackbarStateType from "../types/CustomSnackbarStateType";
+import { ThemeToggle, CustomSnackbar } from "squarecomponents";
+import type { CustomSnackbarStateType } from "squarecomponents";
 import type Color from "../types/ColorType";
 import "../stylesheets/singleplayer.css";
 import "../stylesheets/common.css";

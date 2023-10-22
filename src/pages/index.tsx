@@ -1,5 +1,5 @@
 import React, { FC, useState, StrictMode, useRef } from "react";
-import { Link, type HeadFC, type PageProps, navigate } from "gatsby";
+import { type HeadFC, type PageProps, navigate } from "gatsby";
 import {
   Button,
   ButtonGroup,
@@ -17,9 +17,8 @@ import {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import SettingsIcon from "@mui/icons-material/Settings";
 import config from "../../config";
-import ThemeToggle from "../components/ThemeToggle";
-import CustomSnackbar from "../components/CustomSnackbar";
-import type CustomSnackbarStateType from "../types/CustomSnackbarStateType";
+import { ThemeToggle, CustomSnackbar } from "squarecomponents";
+import type { CustomSnackbarStateType } from "squarecomponents";
 import "../stylesheets/index.css";
 import "../stylesheets/common.css";
 import "@fontsource/roboto/300.css";

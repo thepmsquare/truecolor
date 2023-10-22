@@ -1,9 +1,9 @@
 {
   "name": "truecolor",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "truecolor",
-  "author": "Parth Mangtani",
+  "author": "thePmSquare",
   "keywords": [
     "gatsby"
   ],
@@ -27,7 +27,8 @@
     "gatsby-plugin-sitemap": "^6.12.0",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "squarecomponents": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.3.3",

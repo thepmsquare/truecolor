@@ -16,11 +16,15 @@
 
 ## changelog
 
-### v2
+### v2.1.0
+
+- use squarecomponents for common custom components.
+
+### v2.0.0
 
 - migrate to mui, gatsby and typescript.
 
-### v1
+### v1.0.0
 
 - initial implementation.
 

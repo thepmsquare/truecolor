@@ -3,9 +3,7 @@ import { type HeadFC, type PageProps, navigate } from "gatsby";
 import { Button, Card, StyledEngineProvider, Typography } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import config from "../../config";
-import ThemeToggle from "../components/ThemeToggle";
-
-import type CustomSnackbarStateType from "../types/CustomSnackbarStateType";
+import { ThemeToggle } from "squarecomponents";
 import "../stylesheets/index.css";
 import "../stylesheets/common.css";
 import "@fontsource/roboto/300.css";
@@ -36,12 +34,6 @@ const NotFoundPage: FC<PageProps> = (props) => {
   }
   // state
   const [themeState, changeThemeState] = useState(defaultThemeState);
-  const [snackbarState, changeSnackbarState] =
-    useState<CustomSnackbarStateType>({
-      isOpen: false,
-      message: "",
-      severity: "error",
-    });
 
   // functions
 
