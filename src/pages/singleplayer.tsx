@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { ColorResult, CirclePicker } from "react-color";
+import ColorPicker from "../components/ColorPicker";
 import config from "../../config";
 import { ThemeToggle, CustomSnackbar } from "squarecomponents";
 import type { CustomSnackbarStateType } from "squarecomponents";
@@ -120,9 +120,9 @@ const SinglePlayer: FC<PageProps> = (props) => {
     changeCorrectColor(correctColor);
   };
 
-  const handleColorSelect = (colorResult: ColorResult) => {
+  const handleColorSelect = (colorResult: string) => {
     let targetColor = allColors.find(
-      (ele) => ele.color === colorResult.hex.toUpperCase()
+      (ele) => ele.color === colorResult.toUpperCase()
     );
     if (targetColor) {
       changeSelectedColorId(targetColor.id);
@@ -248,12 +248,12 @@ const SinglePlayer: FC<PageProps> = (props) => {
                   </div>
                 )}
                 <Divider />
-                <CirclePicker
+                <ColorPicker
                   color={
                     allColors.find((ele) => ele.id === selectedColorId)?.color
                   }
                   colors={allColors.map((ele) => ele.color)}
-                  width="3"
+                  width={3}
                   onChange={handleColorSelect}
                 />
                 {submited && (

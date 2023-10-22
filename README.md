@@ -16,13 +16,10 @@
 
 ## changelog
 
-### v2.1.0
-
-- use squarecomponents for common custom components.
-
-### v2.0.0
+### v2.0.0 (incomplete)
 
 - migrate to mui, gatsby and typescript.
+- use squarecomponents for common custom components.
 
 ### v1.0.0
 

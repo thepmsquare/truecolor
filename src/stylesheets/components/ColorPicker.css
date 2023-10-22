@@ -1,0 +1,10 @@
+.ColorPicker {
+  display: grid;
+  gap: 1rem;
+}
+
+.Color {
+  aspect-ratio: 1;
+  cursor: pointer;
+  background-image: none;
+}
