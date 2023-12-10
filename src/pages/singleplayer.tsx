@@ -31,10 +31,14 @@ export const Head: HeadFC = () => <title>{config.appName}</title>;
 const SinglePlayer: FC<PageProps> = (props) => {
   // get stuff from props
   const propsState: any = props.location.state;
-  const propsNumColors: number = propsState?.numColors;
-  const propsHints: number = propsState?.hints;
-  const propsNumLives: number = propsState?.numLives;
-  if (!propsHints || !propsNumColors || !propsNumLives) {
+  const propsNumColors: number | undefined = propsState.numColors;
+  const propsHints: boolean | undefined = propsState.hints;
+  const propsNumLives: number | undefined = propsState.numLives;
+  if (
+    propsHints === undefined ||
+    propsNumColors === undefined ||
+    propsNumLives === undefined
+  ) {
     if (isBrowser) {
       navigate("/");
     }
