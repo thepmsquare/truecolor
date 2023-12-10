@@ -81,6 +81,10 @@ const IndexPage: FC<PageProps> = () => {
     });
   };
 
+  const navigateToMultiPlayer = () => {
+    window.open(config.multiPlayerLink, "_blank");
+  };
+
   // misc
   let currentTheme = createTheme({
     palette: {
@@ -169,8 +173,12 @@ const IndexPage: FC<PageProps> = () => {
                 </MenuItem>
               </Menu>
 
-              <ButtonGroup disabled>
-                <Button variant="contained" fullWidth>
+              <ButtonGroup>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={navigateToMultiPlayer}
+                >
                   multiplayer (online)
                 </Button>
                 <Button variant="contained" size="small">
