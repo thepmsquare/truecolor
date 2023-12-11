@@ -31,9 +31,9 @@ export const Head: HeadFC = () => <title>{config.appName}</title>;
 const SinglePlayer: FC<PageProps> = (props) => {
   // get stuff from props
   const propsState: any = props.location.state;
-  const propsNumColors: number | undefined = propsState.numColors;
-  const propsHints: boolean | undefined = propsState.hints;
-  const propsNumLives: number | undefined = propsState.numLives;
+  const propsNumColors: number | undefined = propsState?.numColors;
+  const propsHints: boolean | undefined = propsState?.hints;
+  const propsNumLives: number | undefined = propsState?.numLives;
   if (
     propsHints === undefined ||
     propsNumColors === undefined ||
