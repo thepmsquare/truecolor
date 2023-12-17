@@ -13,6 +13,7 @@ import {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import ColorPicker from "../components/ColorPicker";
 import config from "../../config";
+import getInverseHexColor from "../utils/getInverseHexColor";
 import { ThemeToggle, CustomSnackbar } from "squarecomponents";
 import type { CustomSnackbarStateType } from "squarecomponents";
 import type Color from "../types/ColorType";
@@ -106,29 +107,6 @@ const SinglePlayer: FC<PageProps> = (props) => {
       ];
     }
     return hex;
-  };
-  const getInverseHexColor = (hexColor: string) => {
-    // Remove the '#' if present
-    hexColor = hexColor.replace(/^#/, "");
-
-    // Parse the hexadecimal color to its RGB components
-    const r = parseInt(hexColor.slice(0, 2), 16);
-    const g = parseInt(hexColor.slice(2, 4), 16);
-    const b = parseInt(hexColor.slice(4, 6), 16);
-
-    // Calculate the inverse (complement) of each RGB component
-    const inverseR = 255 - r;
-    const inverseG = 255 - g;
-    const inverseB = 255 - b;
-
-    // Convert the inverse RGB components back to hexadecimal
-    const inverseHexColor = `#${inverseR
-      .toString(16)
-      .padStart(2, "0")}${inverseG.toString(16).padStart(2, "0")}${inverseB
-      .toString(16)
-      .padStart(2, "0")}`;
-
-    return inverseHexColor;
   };
   const updateColors = () => {
     const allColors = [];
@@ -236,7 +214,7 @@ const SinglePlayer: FC<PageProps> = (props) => {
                 <Typography variant="h2" component="h1">
                   {correctColor.color}
                 </Typography>
-                {propsHints && (
+                {propsHints && correctColor.color && (
                   <div
                     className="hints-container"
                     style={{
@@ -249,13 +227,16 @@ const SinglePlayer: FC<PageProps> = (props) => {
                       )}00 50%, #0000${correctColor.color.slice(5, 7)} 100%)`,
                       borderImage: `linear-gradient(90deg, 
                         ${getInverseHexColor(
-                          "#" + correctColor.color.slice(1, 3) + "0000"
+                          "#" + correctColor.color.slice(1, 3) + "0000",
+                          false
                         )} 0%, 
                       ${getInverseHexColor(
-                        "#00" + correctColor.color.slice(3, 5) + "00"
+                        "#00" + correctColor.color.slice(3, 5) + "00",
+                        false
                       )} 50%,
                       ${getInverseHexColor(
-                        "#0000" + correctColor.color.slice(5, 7)
+                        "#0000" + correctColor.color.slice(5, 7),
+                        false
                       )} 100%)`,
                     }}
                   ></div>

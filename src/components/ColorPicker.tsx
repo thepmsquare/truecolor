@@ -2,6 +2,8 @@ import React from "react";
 import "../stylesheets/components/ColorPicker.css";
 import { Paper } from "@mui/material";
 
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import getInverseHexColor from "../utils/getInverseHexColor";
 const ColorPicker = (props: {
   color: string | undefined;
   colors: string[];
@@ -16,12 +18,17 @@ const ColorPicker = (props: {
       {props.colors.map((color) =>
         color === props.color ? (
           <Paper
-            style={{ backgroundColor: color }}
+            style={{
+              backgroundColor: color,
+              color: getInverseHexColor(color, true),
+            }}
             key={color}
-            className="Color"
+            className="Color SelectedColor"
             onClick={() => props.onChange(color)}
             elevation={12}
-          ></Paper>
+          >
+            <CheckCircleIcon fontSize="large" />
+          </Paper>
         ) : (
           <Paper
             variant="outlined"
