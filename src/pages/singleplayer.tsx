@@ -107,7 +107,29 @@ const SinglePlayer: FC<PageProps> = (props) => {
     }
     return hex;
   };
+  const getInverseHexColor = (hexColor: string) => {
+    // Remove the '#' if present
+    hexColor = hexColor.replace(/^#/, "");
 
+    // Parse the hexadecimal color to its RGB components
+    const r = parseInt(hexColor.slice(0, 2), 16);
+    const g = parseInt(hexColor.slice(2, 4), 16);
+    const b = parseInt(hexColor.slice(4, 6), 16);
+
+    // Calculate the inverse (complement) of each RGB component
+    const inverseR = 255 - r;
+    const inverseG = 255 - g;
+    const inverseB = 255 - b;
+
+    // Convert the inverse RGB components back to hexadecimal
+    const inverseHexColor = `#${inverseR
+      .toString(16)
+      .padStart(2, "0")}${inverseG.toString(16).padStart(2, "0")}${inverseB
+      .toString(16)
+      .padStart(2, "0")}`;
+
+    return inverseHexColor;
+  };
   const updateColors = () => {
     const allColors = [];
     // to prevent duplicate colors in same question.
@@ -215,41 +237,28 @@ const SinglePlayer: FC<PageProps> = (props) => {
                   {correctColor.color}
                 </Typography>
                 {propsHints && (
-                  <div className="hints-container">
-                    <div
-                      style={{
-                        backgroundColor:
-                          "#" + correctColor.color.slice(1, 3) + "0000",
-                        width: `${
-                          (parseInt(correctColor.color.slice(1, 3), 16) * 100) /
-                          255
-                        }%`,
-                      }}
-                      className="hints-div"
-                    ></div>
-                    <div
-                      style={{
-                        backgroundColor:
-                          "#" + "00" + correctColor.color.slice(3, 5) + "00",
-                        width: `${
-                          (parseInt(correctColor.color.slice(3, 5), 16) * 100) /
-                          255
-                        }%`,
-                      }}
-                      className="hints-div"
-                    ></div>
-                    <div
-                      style={{
-                        backgroundColor:
-                          "#" + "0000" + correctColor.color.slice(5, 7),
-                        width: `${
-                          (parseInt(correctColor.color.slice(5, 7), 16) * 100) /
-                          255
-                        }%`,
-                      }}
-                      className="hints-div"
-                    ></div>
-                  </div>
+                  <div
+                    className="hints-container"
+                    style={{
+                      background: `linear-gradient(90deg, #${correctColor.color.slice(
+                        1,
+                        3
+                      )}0000 0%, #00${correctColor.color.slice(
+                        3,
+                        5
+                      )}00 50%, #0000${correctColor.color.slice(5, 7)} 100%)`,
+                      borderImage: `linear-gradient(90deg, 
+                        ${getInverseHexColor(
+                          "#" + correctColor.color.slice(1, 3) + "0000"
+                        )} 0%, 
+                      ${getInverseHexColor(
+                        "#00" + correctColor.color.slice(3, 5) + "00"
+                      )} 50%,
+                      ${getInverseHexColor(
+                        "#0000" + correctColor.color.slice(5, 7)
+                      )} 100%)`,
+                    }}
+                  ></div>
                 )}
                 <Divider />
                 <ColorPicker
