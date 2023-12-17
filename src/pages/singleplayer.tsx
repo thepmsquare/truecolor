@@ -180,7 +180,13 @@ const SinglePlayer: FC<PageProps> = (props) => {
   useEffect(() => {
     // will do once when game is over
     if (gameOver) {
-      navigate("/");
+      navigate("/results/", {
+        state: {
+          currentScore: currentRound,
+          // TODO: change this logic
+          currentModeEasy: propsNumLives === 6,
+        },
+      });
     }
   }, [gameOver]);
 
