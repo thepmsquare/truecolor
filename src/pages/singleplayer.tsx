@@ -328,6 +328,7 @@ const SinglePlayer: FC<PageProps> = (props) => {
                 />
               </CardContent>
               <CardActions className="cardactions">
+                <Button href="/">Back</Button>
                 {!submited ? (
                   <>
                     <Button onClick={handleSkip}>Skip</Button>
