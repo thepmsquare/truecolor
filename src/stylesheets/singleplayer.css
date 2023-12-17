@@ -1,3 +1,10 @@
 .piechart-container svg g g {
   transform: translate(25%, 25%);
 }
+.MuiPieArc-root {
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+.MuiPieArcLabel-root {
+  fill: white;
+}

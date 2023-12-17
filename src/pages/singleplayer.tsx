@@ -293,13 +293,22 @@ const SinglePlayer: FC<PageProps> = (props) => {
                           outerRadius: 100,
 
                           valueFormatter: (ele) => {
-                            let string =
+                            let arcValue =
                               ele.label === "red"
                                 ? parseInt(correctColor.color.slice(1, 3), 16)
                                 : ele.label === "green"
                                 ? parseInt(correctColor.color.slice(3, 5), 16)
                                 : parseInt(correctColor.color.slice(5, 7), 16);
-                            return `${ele.value.toFixed(1)}% | ${string}`;
+                            return `${ele.value.toFixed(1)}% | ${arcValue}`;
+                          },
+                          arcLabel: (ele) => {
+                            let arcValue =
+                              ele.label === "red"
+                                ? parseInt(correctColor.color.slice(1, 3), 16)
+                                : ele.label === "green"
+                                ? parseInt(correctColor.color.slice(3, 5), 16)
+                                : parseInt(correctColor.color.slice(5, 7), 16);
+                            return arcValue.toString();
                           },
                         },
                       ]}
