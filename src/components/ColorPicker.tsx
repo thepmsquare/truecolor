@@ -31,7 +31,6 @@ const ColorPicker = (props: {
           </Paper>
         ) : (
           <Paper
-            variant="outlined"
             style={{ backgroundColor: color }}
             key={color}
             className="Color"
