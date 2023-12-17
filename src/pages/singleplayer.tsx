@@ -13,7 +13,8 @@ import {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import ColorPicker from "../components/ColorPicker";
 import config from "../../config";
-import getInverseHexColor from "../utils/getInverseHexColor";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeToggle, CustomSnackbar } from "squarecomponents";
 import type { CustomSnackbarStateType } from "squarecomponents";
 import type Color from "../types/ColorType";
@@ -23,7 +24,6 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -216,30 +216,96 @@ const SinglePlayer: FC<PageProps> = (props) => {
                 </Typography>
                 {propsHints && correctColor.color && (
                   <div
-                    className="hints-container"
-                    style={{
-                      background: `linear-gradient(90deg, #${correctColor.color.slice(
-                        1,
-                        3
-                      )}0000 0%, #00${correctColor.color.slice(
-                        3,
-                        5
-                      )}00 50%, #0000${correctColor.color.slice(5, 7)} 100%)`,
-                      borderImage: `linear-gradient(90deg, 
-                        ${getInverseHexColor(
-                          "#" + correctColor.color.slice(1, 3) + "0000",
-                          false
-                        )} 0%, 
-                      ${getInverseHexColor(
-                        "#00" + correctColor.color.slice(3, 5) + "00",
-                        false
-                      )} 50%,
-                      ${getInverseHexColor(
-                        "#0000" + correctColor.color.slice(5, 7),
-                        false
-                      )} 100%)`,
-                    }}
-                  ></div>
+                    style={{ width: "100%", aspectRatio: 1 }}
+                    className="piechart-container"
+                  >
+                    <PieChart
+                      colors={[
+                        `#${correctColor.color.slice(1, 3)}0000`,
+                        `#00${correctColor.color.slice(3, 5)}00`,
+                        `#0000${correctColor.color.slice(5, 7)}`,
+                      ]}
+                      series={[
+                        {
+                          data: [
+                            {
+                              id: 0,
+                              value:
+                                (parseInt(correctColor.color.slice(1, 3), 16) /
+                                  (parseInt(
+                                    correctColor.color.slice(1, 3),
+                                    16
+                                  ) +
+                                    parseInt(
+                                      correctColor.color.slice(3, 5),
+                                      16
+                                    ) +
+                                    parseInt(
+                                      correctColor.color.slice(5, 7),
+                                      16
+                                    ))) *
+                                100,
+                              label: "red",
+                            },
+                            {
+                              id: 1,
+                              value:
+                                (parseInt(correctColor.color.slice(3, 5), 16) /
+                                  (parseInt(
+                                    correctColor.color.slice(1, 3),
+                                    16
+                                  ) +
+                                    parseInt(
+                                      correctColor.color.slice(3, 5),
+                                      16
+                                    ) +
+                                    parseInt(
+                                      correctColor.color.slice(5, 7),
+                                      16
+                                    ))) *
+                                100,
+                              label: "green",
+                            },
+                            {
+                              id: 2,
+                              value:
+                                (parseInt(correctColor.color.slice(5, 7), 16) /
+                                  (parseInt(
+                                    correctColor.color.slice(1, 3),
+                                    16
+                                  ) +
+                                    parseInt(
+                                      correctColor.color.slice(3, 5),
+                                      16
+                                    ) +
+                                    parseInt(
+                                      correctColor.color.slice(5, 7),
+                                      16
+                                    ))) *
+                                100,
+                              label: "blue",
+                            },
+                          ],
+
+                          cornerRadius: 4,
+                          paddingAngle: 4,
+                          innerRadius: 30,
+                          outerRadius: 100,
+
+                          valueFormatter: (ele) => {
+                            let string =
+                              ele.label === "red"
+                                ? parseInt(correctColor.color.slice(1, 3), 16)
+                                : ele.label === "green"
+                                ? parseInt(correctColor.color.slice(3, 5), 16)
+                                : parseInt(correctColor.color.slice(5, 7), 16);
+                            return `${ele.value.toFixed(1)}% | ${string}`;
+                          },
+                        },
+                      ]}
+                      slotProps={{ legend: { hidden: true } }}
+                    />
+                  </div>
                 )}
                 <Divider />
                 <ColorPicker

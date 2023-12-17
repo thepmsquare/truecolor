@@ -1,6 +1,3 @@
-.hints-container {
-  aspect-ratio: 1;
-  border-width: 0.25rem;
-  border-style: solid;
-  border-image-slice: 1 !important;
+.piechart-container svg g g {
+  transform: translate(25%, 25%);
 }
