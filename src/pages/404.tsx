@@ -82,6 +82,7 @@ const NotFoundPage: FC<PageProps> = (props) => {
               <ThemeToggle
                 themeState={themeState}
                 customChangeThemeState={customChangeThemeState}
+                variant="text"
               />
             </div>
           </Card>

@@ -277,6 +277,7 @@ const SinglePlayer: FC<PageProps> = (props) => {
                 <ThemeToggle
                   themeState={themeState}
                   customChangeThemeState={customChangeThemeState}
+                  variant="text"
                 />
               </CardContent>
               <CardActions className="cardactions">
