@@ -1,21 +1,15 @@
-import React, { FC, useState, StrictMode, useRef } from "react";
+import React, { FC, useState, StrictMode } from "react";
 import { type HeadFC, type PageProps, navigate } from "gatsby";
 import {
   Button,
-  ButtonGroup,
   Card,
-  Divider,
-  FormControl,
-  FormLabel,
-  Menu,
-  MenuItem,
+  Link,
   StyledEngineProvider,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import SettingsIcon from "@mui/icons-material/Settings";
+import StartIcon from "@mui/icons-material/Start";
+import LaunchIcon from "@mui/icons-material/Launch";
 import config from "../../config";
 import { ThemeToggle, CustomSnackbar } from "squarecomponents";
 import type { CustomSnackbarStateType } from "squarecomponents";
@@ -55,12 +49,6 @@ const IndexPage: FC<PageProps> = () => {
       message: "",
       severity: "error",
     });
-  // TODO get from localstorage
-  const [isSinglePlayerSettingsOpen, changeIsSinglePlayerSettingsOpen] =
-    useState(false);
-  const [singleplayerNumColors, changeSingleplayerNumColors] = useState(3);
-  const [singleplayerHints, changeSingleplayerHints] = useState(true);
-  const [singleplayerNumLives, changeSingleplayerNumLives] = useState(3);
 
   // functions
 
@@ -71,18 +59,24 @@ const IndexPage: FC<PageProps> = () => {
     }
   };
 
-  const navigateToSinglePlayer = () => {
+  const navigateToSinglePlayer = (isEasyModeOn: boolean) => {
+    let state;
+    if (isEasyModeOn) {
+      state = {
+        numColors: 3,
+        hints: true,
+        numLives: 6,
+      };
+    } else {
+      state = {
+        numColors: 6,
+        hints: false,
+        numLives: 3,
+      };
+    }
     navigate("/singleplayer/", {
-      state: {
-        numColors: singleplayerNumColors,
-        hints: singleplayerHints,
-        numLives: singleplayerNumLives,
-      },
+      state,
     });
-  };
-
-  const navigateToMultiPlayer = () => {
-    window.open(config.multiPlayerLink, "_blank");
   };
 
   // misc
@@ -94,101 +88,66 @@ const IndexPage: FC<PageProps> = () => {
       fontFamily: config.defaultFont,
     },
   });
-  let singleplayerSettingsMenuRef = useRef(null);
+  const breakpointForTitle = parseInt(
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--breakpoint-for-title")
+      .trim()
+  );
+  const documentWidth =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+  console.log();
+
   return (
     <StrictMode>
       <ThemeProvider theme={currentTheme}>
         <StyledEngineProvider injectFirst>
           <Card className="main" square>
             <div className="inside-main">
-              <Typography variant="h1" color="primary">
+              <Typography
+                variant={breakpointForTitle > documentWidth ? "h2" : "h1"}
+                component="h1"
+                color="primary"
+                title={config.appName}
+                className="index-title"
+              >
                 {config.appName}
               </Typography>
+              <Typography variant="subtitle1" align="center" color="primary">
+                a singleplayer color quiz.
+              </Typography>
 
-              <ButtonGroup>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={navigateToSinglePlayer}
-                >
-                  singleplayer
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  ref={singleplayerSettingsMenuRef}
-                  onClick={() => changeIsSinglePlayerSettingsOpen(true)}
-                >
-                  <SettingsIcon fontSize="small" />
-                </Button>
-              </ButtonGroup>
-
-              <Menu
-                open={isSinglePlayerSettingsOpen}
-                anchorEl={singleplayerSettingsMenuRef.current}
-                onClose={() => changeIsSinglePlayerSettingsOpen(false)}
+              <Button
+                fullWidth
+                onClick={() => navigateToSinglePlayer(true)}
+                endIcon={<StartIcon />}
+                size="large"
+                variant="contained"
               >
-                <MenuItem dense disableRipple>
-                  <FormControl>
-                    <FormLabel>number of options</FormLabel>
-                    <ToggleButtonGroup
-                      exclusive
-                      value={singleplayerNumColors}
-                      onChange={(_, value) =>
-                        changeSingleplayerNumColors(value)
-                      }
-                    >
-                      <ToggleButton value={3}>three</ToggleButton>
-                      <ToggleButton value={6}>six</ToggleButton>
-                    </ToggleButtonGroup>
-                  </FormControl>
-                </MenuItem>
-                <Divider />
-                <MenuItem dense disableRipple>
-                  <FormControl>
-                    <FormLabel>hints</FormLabel>
-                    <ToggleButtonGroup
-                      exclusive
-                      value={singleplayerHints}
-                      onChange={(_, value) => changeSingleplayerHints(value)}
-                    >
-                      <ToggleButton value={true}>on</ToggleButton>
-                      <ToggleButton value={false}>off</ToggleButton>
-                    </ToggleButtonGroup>
-                  </FormControl>
-                </MenuItem>
-                <Divider />
-                <MenuItem dense disableRipple>
-                  <FormControl>
-                    <FormLabel>number of lives</FormLabel>
-                    <ToggleButtonGroup
-                      exclusive
-                      value={singleplayerNumLives}
-                      onChange={(_, value) => changeSingleplayerNumLives(value)}
-                    >
-                      <ToggleButton value={3}>three</ToggleButton>
-                      <ToggleButton value={6}>six</ToggleButton>
-                    </ToggleButtonGroup>
-                  </FormControl>
-                </MenuItem>
-              </Menu>
+                normal mode
+              </Button>
 
-              <ButtonGroup>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={navigateToMultiPlayer}
-                >
-                  multiplayer (online)
+              <Button
+                fullWidth
+                onClick={() => navigateToSinglePlayer(false)}
+                endIcon={<StartIcon />}
+                size="large"
+                variant="contained"
+              >
+                challenge mode
+              </Button>
+
+              <Link href={config.multiPlayerLink}>
+                <Button fullWidth endIcon={<LaunchIcon />} color="secondary">
+                  multicolor
                 </Button>
-                <Button variant="contained" size="small">
-                  <SettingsIcon fontSize="small" />
-                </Button>
-              </ButtonGroup>
+              </Link>
 
               <ThemeToggle
                 themeState={themeState}
                 customChangeThemeState={customChangeThemeState}
+                variant="text"
               />
             </div>
           </Card>

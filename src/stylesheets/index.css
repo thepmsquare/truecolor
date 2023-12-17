@@ -1,0 +1,7 @@
+.index-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+:root {
+  --breakpoint-for-title: 500;
+}
