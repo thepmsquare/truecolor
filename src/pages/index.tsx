@@ -88,16 +88,21 @@ const IndexPage: FC<PageProps> = () => {
       fontFamily: config.defaultFont,
     },
   });
-  const breakpointForTitle = parseInt(
-    getComputedStyle(document.documentElement)
-      .getPropertyValue("--breakpoint-for-title")
-      .trim()
-  );
-  const documentWidth =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-  console.log();
+  let variantForTitle: "h1" | "h2";
+  if (isBrowser) {
+    const breakpointForTitle = parseInt(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--breakpoint-for-title")
+        .trim()
+    );
+    const documentWidth =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth;
+    variantForTitle = breakpointForTitle > documentWidth ? "h2" : "h1";
+  } else {
+    variantForTitle = "h1";
+  }
 
   return (
     <StrictMode>
@@ -106,7 +111,7 @@ const IndexPage: FC<PageProps> = () => {
           <Card className="main" square>
             <div className="inside-main">
               <Typography
-                variant={breakpointForTitle > documentWidth ? "h2" : "h1"}
+                variant={variantForTitle}
                 component="h1"
                 color="primary"
                 title={config.appName}
