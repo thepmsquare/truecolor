@@ -8,7 +8,7 @@ const config: Config = {
   appName: "truecolor",
   defaultThemeState: "dark",
   defaultFont: "roboto",
-  multiPlayerLink: "https://thepmsquare.github.io/multiplayer",
+  multiPlayerLink: "https://thepmsquare.github.io/multicolor",
 };
 
 export default config;
