@@ -143,7 +143,7 @@ const IndexPage: FC<PageProps> = () => {
                 challenge mode
               </Button>
 
-              <Link href={config.multiPlayerLink}>
+              <Link href={config.multiPlayerLink} target="_blank">
                 <Button fullWidth endIcon={<LaunchIcon />} color="secondary">
                   multicolor
                 </Button>
