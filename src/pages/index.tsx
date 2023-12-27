@@ -1,4 +1,4 @@
-import React, { FC, useState, StrictMode } from "react";
+import React, { FC, useState, StrictMode, useEffect } from "react";
 import { type HeadFC, type PageProps, navigate } from "gatsby";
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import StartIcon from "@mui/icons-material/Start";
 import LaunchIcon from "@mui/icons-material/Launch";
 import config from "../../config";
 import { ThemeToggle, CustomSnackbar } from "squarecomponents";
@@ -42,6 +41,9 @@ const IndexPage: FC<PageProps> = () => {
     }
   }
   // state
+  type variantForTitle = "h1" | "h2";
+  const [titleComponent, changeTitleComponent] =
+    useState<variantForTitle>("h2");
   const [themeState, changeThemeState] = useState(defaultThemeState);
   const [snackbarState, changeSnackbarState] =
     useState<CustomSnackbarStateType>({
@@ -51,7 +53,6 @@ const IndexPage: FC<PageProps> = () => {
     });
 
   // functions
-
   const customChangeThemeState = (newThemeState: "dark" | "light") => {
     changeThemeState(newThemeState);
     if (isBrowser) {
@@ -79,6 +80,36 @@ const IndexPage: FC<PageProps> = () => {
     });
   };
 
+  const handleResize = () => {
+    if (isBrowser) {
+      const breakpointForTitle = parseInt(
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--breakpoint-for-title")
+          .trim()
+      );
+      const documentWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (documentWidth > breakpointForTitle) {
+        changeTitleComponent("h1");
+      } else {
+        changeTitleComponent("h2");
+      }
+    }
+  };
+
+  // useEffect
+  if (isBrowser) {
+    useEffect(() => {
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
+  }
+
   // misc
   let currentTheme = createTheme({
     palette: {
@@ -88,61 +119,45 @@ const IndexPage: FC<PageProps> = () => {
       fontFamily: config.defaultFont,
     },
   });
-  let variantForTitle: "h1" | "h2";
-  if (isBrowser) {
-    const breakpointForTitle = parseInt(
-      getComputedStyle(document.documentElement)
-        .getPropertyValue("--breakpoint-for-title")
-        .trim()
-    );
-    const documentWidth =
-      window.innerWidth ||
-      document.documentElement.clientWidth ||
-      document.body.clientWidth;
-    variantForTitle = breakpointForTitle > documentWidth ? "h2" : "h1";
-  } else {
-    variantForTitle = "h1";
-  }
 
   return (
     <StrictMode>
       <ThemeProvider theme={currentTheme}>
         <StyledEngineProvider injectFirst>
-          <Card className="main" square>
-            <div className="inside-main">
+          <Card className="index" square>
+            <div className="index-header">
               <Typography
-                variant={variantForTitle}
+                variant={titleComponent}
                 component="h1"
-                color="primary"
                 title={config.appName}
                 className="index-title"
+                color="primary"
               >
                 {config.appName}
               </Typography>
-              <Typography variant="subtitle1" align="center" color="primary">
+              <Typography variant="subtitle1" align="center" color="secondary">
                 a singleplayer color quiz.
               </Typography>
+            </div>
+            <div className="index-main">
+              <div className="index-buttons-container">
+                <Button
+                  onClick={() => navigateToSinglePlayer(true)}
+                  size="large"
+                  variant="contained"
+                >
+                  normal mode
+                </Button>
 
-              <Button
-                fullWidth
-                onClick={() => navigateToSinglePlayer(true)}
-                endIcon={<StartIcon />}
-                size="large"
-                variant="contained"
-              >
-                normal mode
-              </Button>
-
-              <Button
-                fullWidth
-                onClick={() => navigateToSinglePlayer(false)}
-                endIcon={<StartIcon />}
-                size="large"
-                variant="contained"
-              >
-                challenge mode
-              </Button>
-
+                <Button
+                  onClick={() => navigateToSinglePlayer(false)}
+                  size="large"
+                  variant="outlined"
+                  color="error"
+                >
+                  challenge mode
+                </Button>
+              </div>
               <Link href={config.multiPlayerLink} target="_blank">
                 <Button fullWidth endIcon={<LaunchIcon />} color="secondary">
                   multicolor
