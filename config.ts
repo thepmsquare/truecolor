@@ -6,7 +6,7 @@ interface Config {
 }
 const config: Config = {
   appName: "truecolor",
-  defaultThemeState: "dark",
+  defaultThemeState: "light",
   defaultFont: "roboto",
   multiPlayerLink: "https://thepmsquare.github.io/multicolor",
 };
