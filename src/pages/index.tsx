@@ -3,12 +3,17 @@ import { type HeadFC, type PageProps, navigate } from "gatsby";
 import {
   Button,
   Card,
+  IconButton,
   Link,
   StyledEngineProvider,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import LaunchIcon from "@mui/icons-material/Launch";
+import InfoIcon from "@mui/icons-material/Info";
+import GroupsIcon from "@mui/icons-material/Groups";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import config from "../../config";
 import { ThemeToggle } from "squarecomponents";
 import "../stylesheets/index.css";
@@ -40,9 +45,7 @@ const IndexPage: FC<PageProps> = () => {
     }
   }
   // state
-  type variantForTitle = "h1" | "h2";
-  const [titleComponent, changeTitleComponent] =
-    useState<variantForTitle>("h2");
+  const [isDesktop, changeIsDesktop] = useState(false);
   const [themeState, changeThemeState] = useState(defaultThemeState);
 
   // functions
@@ -75,19 +78,19 @@ const IndexPage: FC<PageProps> = () => {
 
   const handleResize = () => {
     if (isBrowser) {
-      const breakpointForTitle = parseInt(
+      const breakpointForDesktop = parseInt(
         getComputedStyle(document.documentElement)
-          .getPropertyValue("--breakpoint-for-title")
+          .getPropertyValue("--breakpoint-for-desktop")
           .trim()
       );
       const documentWidth =
         window.innerWidth ||
         document.documentElement.clientWidth ||
         document.body.clientWidth;
-      if (documentWidth > breakpointForTitle) {
-        changeTitleComponent("h1");
+      if (documentWidth > breakpointForDesktop) {
+        changeIsDesktop(true);
       } else {
-        changeTitleComponent("h2");
+        changeIsDesktop(false);
       }
     }
   };
@@ -117,31 +120,100 @@ const IndexPage: FC<PageProps> = () => {
     <StrictMode>
       <ThemeProvider theme={currentTheme}>
         <StyledEngineProvider injectFirst>
-          <Card className="index" square>
-            <div className="index-header">
-              <Typography
-                variant={titleComponent}
-                component="h1"
-                title={config.appName}
-                className="index-title"
-                color="primary"
-              >
-                {config.appName}
-              </Typography>
-              <Typography variant="subtitle1" align="center" color="secondary">
-                a singleplayer color quiz.
-              </Typography>
-            </div>
-            <div className="index-main">
-              <div className="index-buttons-container">
-                <Button
-                  onClick={() => navigateToSinglePlayer(true)}
-                  size="large"
-                  variant="contained"
+          {isDesktop ? (
+            <Card className="index" square>
+              <div className="index-header">
+                <Typography
+                  variant="h1"
+                  component="h1"
+                  title={config.appName}
+                  className="index-title"
+                  color="primary"
                 >
-                  normal mode
+                  {config.appName}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  align="center"
+                  color="secondary"
+                >
+                  a singleplayer color quiz.
+                </Typography>
+              </div>
+              <div className="index-main">
+                <div className="index-buttons-container">
+                  <Button
+                    onClick={() => navigateToSinglePlayer(false)}
+                    size="large"
+                    variant="outlined"
+                    color="error"
+                  >
+                    challenge mode
+                  </Button>
+                  <Button
+                    onClick={() => navigateToSinglePlayer(true)}
+                    size="large"
+                    variant="contained"
+                  >
+                    normal mode
+                  </Button>
+                </div>
+                <Button fullWidth color="info" endIcon={<InfoIcon />}>
+                  instructions
                 </Button>
+                <Link href={config.multiPlayerLink} target="_blank">
+                  <Button fullWidth endIcon={<LaunchIcon />} color="secondary">
+                    multicolor
+                  </Button>
+                </Link>
+                <ThemeToggle
+                  themeState={themeState}
+                  customChangeThemeState={customChangeThemeState}
+                  variant="text"
+                />
+              </div>
+            </Card>
+          ) : (
+            <Card className="index-phone" square>
+              <div className="index-center-phone">
+                <div className="index-header-phone">
+                  <Typography
+                    variant="h2"
+                    component="h1"
+                    title={config.appName}
+                    className="index-title-phone"
+                    color="primary"
+                  >
+                    {config.appName}
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    align="center"
+                    color="secondary"
+                  >
+                    a singleplayer color quiz.
+                  </Typography>
+                </div>
+                <div className="index-icons-container-phone">
+                  <Tooltip title="instructions">
+                    <IconButton color="info">
+                      <InfoIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="multicolor">
+                    <IconButton color="secondary">
+                      <GroupsIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="change appearance">
+                    <IconButton color="default">
+                      <DarkModeIcon />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </div>
 
+              <div className="index-buttons-container-phone">
                 <Button
                   onClick={() => navigateToSinglePlayer(false)}
                   size="large"
@@ -150,20 +222,16 @@ const IndexPage: FC<PageProps> = () => {
                 >
                   challenge mode
                 </Button>
-              </div>
-              <Link href={config.multiPlayerLink} target="_blank">
-                <Button fullWidth endIcon={<LaunchIcon />} color="secondary">
-                  multicolor
+                <Button
+                  onClick={() => navigateToSinglePlayer(true)}
+                  size="large"
+                  variant="contained"
+                >
+                  normal mode
                 </Button>
-              </Link>
-
-              <ThemeToggle
-                themeState={themeState}
-                customChangeThemeState={customChangeThemeState}
-                variant="text"
-              />
-            </div>
-          </Card>
+              </div>
+            </Card>
+          )}
         </StyledEngineProvider>
       </ThemeProvider>
     </StrictMode>
