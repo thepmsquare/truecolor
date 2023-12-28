@@ -10,8 +10,7 @@ import {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import LaunchIcon from "@mui/icons-material/Launch";
 import config from "../../config";
-import { ThemeToggle, CustomSnackbar } from "squarecomponents";
-import type { CustomSnackbarStateType } from "squarecomponents";
+import { ThemeToggle } from "squarecomponents";
 import "../stylesheets/index.css";
 import "../stylesheets/common.css";
 import "@fontsource/roboto/300.css";
@@ -45,12 +44,6 @@ const IndexPage: FC<PageProps> = () => {
   const [titleComponent, changeTitleComponent] =
     useState<variantForTitle>("h2");
   const [themeState, changeThemeState] = useState(defaultThemeState);
-  const [snackbarState, changeSnackbarState] =
-    useState<CustomSnackbarStateType>({
-      isOpen: false,
-      message: "",
-      severity: "error",
-    });
 
   // functions
   const customChangeThemeState = (newThemeState: "dark" | "light") => {
@@ -171,10 +164,6 @@ const IndexPage: FC<PageProps> = () => {
               />
             </div>
           </Card>
-          <CustomSnackbar
-            snackbarState={snackbarState}
-            changeSnackbarState={changeSnackbarState}
-          />
         </StyledEngineProvider>
       </ThemeProvider>
     </StrictMode>
