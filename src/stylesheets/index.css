@@ -5,6 +5,7 @@
   padding: 5dvh 5dvw;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 .index-header-phone {
   width: 100%;

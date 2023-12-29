@@ -10,10 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import LaunchIcon from "@mui/icons-material/Launch";
-import InfoIcon from "@mui/icons-material/Info";
-import GroupsIcon from "@mui/icons-material/Groups";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
 import config from "../../config";
 import { ThemeToggle } from "squarecomponents";
 import "../stylesheets/index.css";
@@ -128,15 +124,10 @@ const IndexPage: FC<PageProps> = () => {
                   component="h1"
                   title={config.appName}
                   className="index-title"
-                  color="primary"
                 >
                   {config.appName}
                 </Typography>
-                <Typography
-                  variant="subtitle1"
-                  align="center"
-                  color="secondary"
-                >
+                <Typography variant="subtitle1" align="center">
                   a singleplayer color quiz.
                 </Typography>
               </div>
@@ -146,30 +137,35 @@ const IndexPage: FC<PageProps> = () => {
                     onClick={() => navigateToSinglePlayer(false)}
                     size="large"
                     variant="outlined"
-                    color="error"
+                    color="inherit"
                   >
                     challenge mode
                   </Button>
                   <Button
                     onClick={() => navigateToSinglePlayer(true)}
                     size="large"
-                    variant="contained"
+                    variant="outlined"
+                    color="inherit"
                   >
                     normal mode
                   </Button>
                 </div>
-                <Button fullWidth color="info" endIcon={<InfoIcon />}>
+                <Button
+                  fullWidth
+                  color="inherit"
+                  href={config.multiPlayerLink}
+                  target="_blank"
+                >
+                  multicolor
+                </Button>
+                <Button fullWidth color="inherit">
                   instructions
                 </Button>
-                <Link href={config.multiPlayerLink} target="_blank">
-                  <Button fullWidth endIcon={<LaunchIcon />} color="secondary">
-                    multicolor
-                  </Button>
-                </Link>
                 <ThemeToggle
                   themeState={themeState}
                   customChangeThemeState={customChangeThemeState}
-                  variant="text"
+                  downArrowIcon={true}
+                  color="inherit"
                 />
               </div>
             </Card>
@@ -182,50 +178,43 @@ const IndexPage: FC<PageProps> = () => {
                     component="h1"
                     title={config.appName}
                     className="index-title-phone"
-                    color="primary"
                   >
                     {config.appName}
                   </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="secondary"
-                  >
+                  <Typography variant="subtitle1" align="center">
                     a singleplayer color quiz.
                   </Typography>
-                </div>
-                <div className="index-icons-container-phone">
-                  <Tooltip title="instructions">
-                    <IconButton color="info">
-                      <InfoIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="multicolor">
-                    <IconButton color="secondary">
-                      <GroupsIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="change appearance">
-                    <IconButton color="default">
-                      <DarkModeIcon />
-                    </IconButton>
-                  </Tooltip>
                 </div>
               </div>
 
               <div className="index-buttons-container-phone">
+                <ThemeToggle
+                  themeState={themeState}
+                  customChangeThemeState={customChangeThemeState}
+                  downArrowIcon={true}
+                  color="inherit"
+                />
+                <Button color="inherit">instructions</Button>
+                <Button
+                  href={config.multiPlayerLink}
+                  color="inherit"
+                  target="_blank"
+                >
+                  multicolor
+                </Button>
                 <Button
                   onClick={() => navigateToSinglePlayer(false)}
                   size="large"
                   variant="outlined"
-                  color="error"
+                  color="inherit"
                 >
                   challenge mode
                 </Button>
                 <Button
                   onClick={() => navigateToSinglePlayer(true)}
                   size="large"
-                  variant="contained"
+                  variant="outlined"
+                  color="inherit"
                 >
                   normal mode
                 </Button>
