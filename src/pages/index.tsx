@@ -155,6 +155,7 @@ const IndexPage: FC<PageProps> = () => {
                   color="inherit"
                   href={config.multiPlayerLink}
                   target="_blank"
+                  disabled
                 >
                   multicolor
                 </Button>
@@ -199,6 +200,7 @@ const IndexPage: FC<PageProps> = () => {
                   href={config.multiPlayerLink}
                   color="inherit"
                   target="_blank"
+                  disabled
                 >
                   multicolor
                 </Button>
