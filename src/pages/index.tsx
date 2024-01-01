@@ -167,6 +167,7 @@ const IndexPage: FC<PageProps> = () => {
                   customChangeThemeState={customChangeThemeState}
                   downArrowIcon={true}
                   color="inherit"
+                  fullwidth
                 />
               </div>
             </Card>
@@ -182,7 +183,7 @@ const IndexPage: FC<PageProps> = () => {
                   >
                     {config.appName}
                   </Typography>
-                  <Typography variant="subtitle1" align="center">
+                  <Typography variant="subtitle1" align="center" gutterBottom>
                     a singleplayer color quiz.
                   </Typography>
                 </div>
@@ -194,6 +195,7 @@ const IndexPage: FC<PageProps> = () => {
                   customChangeThemeState={customChangeThemeState}
                   downArrowIcon={true}
                   color="inherit"
+                  fullwidth
                 />
                 <Button color="inherit">instructions</Button>
                 <Button
