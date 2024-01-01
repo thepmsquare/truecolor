@@ -170,7 +170,9 @@ const SinglePlayer: FC<PageProps> = (props) => {
     }
     changeBackgroundColor(correctColor.color);
   };
-
+  const navtigateToHome = async () => {
+    await navigate("/");
+  };
   //useEffect
   useEffect(() => {
     // will do once when page is refresh not on consecutive state loads
@@ -343,7 +345,7 @@ const SinglePlayer: FC<PageProps> = (props) => {
                 />
               </CardContent>
               <CardActions className="cardactions">
-                <Button href="/">Back</Button>
+                <Button onClick={navtigateToHome}>Back</Button>
                 {!submited ? (
                   <>
                     <Button onClick={handleSkip}>Skip</Button>
