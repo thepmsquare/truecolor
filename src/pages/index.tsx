@@ -174,19 +174,17 @@ const IndexPage: FC<PageProps> = () => {
           ) : (
             <Card className="index-phone" square>
               <div className="index-center-phone">
-                <div className="index-header-phone">
-                  <Typography
-                    variant="h2"
-                    component="h1"
-                    title={config.appName}
-                    className="index-title-phone"
-                  >
-                    {config.appName}
-                  </Typography>
-                  <Typography variant="subtitle1" align="center" gutterBottom>
-                    a singleplayer color quiz.
-                  </Typography>
-                </div>
+                <Typography
+                  variant="h2"
+                  component="h1"
+                  title={config.appName}
+                  className="index-title-phone"
+                >
+                  {config.appName}
+                </Typography>
+                <Typography variant="subtitle1" align="center" gutterBottom>
+                  a singleplayer color quiz.
+                </Typography>
               </div>
 
               <div className="index-buttons-container-phone">
