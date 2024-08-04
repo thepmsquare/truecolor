@@ -9,11 +9,13 @@ import {
   Divider,
   StyledEngineProvider,
   Typography,
+  LinearProgress,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import ColorPicker from "../components/ColorPicker";
 import config from "../../config";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ThemeToggle, CustomSnackbar } from "squarecomponents";
 import type { CustomSnackbarStateType } from "squarecomponents";
@@ -70,6 +72,7 @@ const SinglePlayer: FC<PageProps> = (props) => {
       message: "",
       severity: "error",
     });
+  const [isDesktop, changeIsDesktop] = useState(false);
   // game states ========
   const [numCurrentLives, changeNumCurrentLives] = useState(propsNumLives);
   const [allColors, changeAllColors] = useState<Color[]>([]);
@@ -173,10 +176,38 @@ const SinglePlayer: FC<PageProps> = (props) => {
   const navtigateToHome = async () => {
     await navigate("/");
   };
+
+  const handleResize = () => {
+    if (isBrowser) {
+      const breakpointForDesktop = parseInt(
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--breakpoint-for-desktop")
+          .trim()
+      );
+      const documentWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (documentWidth > breakpointForDesktop) {
+        changeIsDesktop(true);
+      } else {
+        changeIsDesktop(false);
+      }
+    }
+  };
+
   //useEffect
   useEffect(() => {
     // will do once when page is refresh not on consecutive state loads
     updateColors();
+
+    if (isBrowser) {
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -206,162 +237,38 @@ const SinglePlayer: FC<PageProps> = (props) => {
     <StrictMode>
       <ThemeProvider theme={currentTheme}>
         <StyledEngineProvider injectFirst>
-          <div className="main" style={{ backgroundColor: backgroundColor }}>
-            <Card className="inside-main">
-              <CardHeader
-                title={`Round ${currentRound}`}
-                subheader={
-                  <>
-                    {[...Array(numCurrentLives).keys()].map((_, idx) => (
-                      <FavoriteIcon key={idx} color="error" />
-                    ))}
-                  </>
-                }
-              />
-              <CardContent className="cardcontent">
-                <Typography variant="h2" component="h1">
-                  {correctColor.color}
-                </Typography>
-                {propsHints && correctColor.color && (
-                  <div
-                    style={{ width: "100%", aspectRatio: 1 }}
-                    className="piechart-container"
-                  >
-                    <PieChart
-                      colors={[
-                        `#${correctColor.color.slice(1, 3)}0000`,
-                        `#00${correctColor.color.slice(3, 5)}00`,
-                        `#0000${correctColor.color.slice(5, 7)}`,
-                      ]}
-                      series={[
-                        {
-                          data: [
-                            {
-                              id: 0,
-                              value:
-                                (parseInt(correctColor.color.slice(1, 3), 16) /
-                                  (parseInt(
-                                    correctColor.color.slice(1, 3),
-                                    16
-                                  ) +
-                                    parseInt(
-                                      correctColor.color.slice(3, 5),
-                                      16
-                                    ) +
-                                    parseInt(
-                                      correctColor.color.slice(5, 7),
-                                      16
-                                    ))) *
-                                100,
-                              label: "red",
-                            },
-                            {
-                              id: 1,
-                              value:
-                                (parseInt(correctColor.color.slice(3, 5), 16) /
-                                  (parseInt(
-                                    correctColor.color.slice(1, 3),
-                                    16
-                                  ) +
-                                    parseInt(
-                                      correctColor.color.slice(3, 5),
-                                      16
-                                    ) +
-                                    parseInt(
-                                      correctColor.color.slice(5, 7),
-                                      16
-                                    ))) *
-                                100,
-                              label: "green",
-                            },
-                            {
-                              id: 2,
-                              value:
-                                (parseInt(correctColor.color.slice(5, 7), 16) /
-                                  (parseInt(
-                                    correctColor.color.slice(1, 3),
-                                    16
-                                  ) +
-                                    parseInt(
-                                      correctColor.color.slice(3, 5),
-                                      16
-                                    ) +
-                                    parseInt(
-                                      correctColor.color.slice(5, 7),
-                                      16
-                                    ))) *
-                                100,
-                              label: "blue",
-                            },
-                          ],
-
-                          cornerRadius: 4,
-                          paddingAngle: 4,
-                          innerRadius: 30,
-                          outerRadius: 100,
-
-                          valueFormatter: (ele) => {
-                            let arcValue =
-                              ele.label === "red"
-                                ? parseInt(correctColor.color.slice(1, 3), 16)
-                                : ele.label === "green"
-                                ? parseInt(correctColor.color.slice(3, 5), 16)
-                                : parseInt(correctColor.color.slice(5, 7), 16);
-                            return `${ele.value.toFixed(1)}% | ${arcValue}`;
-                          },
-                          arcLabel: (ele) => {
-                            let arcValue =
-                              ele.label === "red"
-                                ? parseInt(correctColor.color.slice(1, 3), 16)
-                                : ele.label === "green"
-                                ? parseInt(correctColor.color.slice(3, 5), 16)
-                                : parseInt(correctColor.color.slice(5, 7), 16);
-                            return arcValue.toString();
-                          },
-                        },
-                      ]}
-                      slotProps={{ legend: { hidden: true } }}
-                    />
-                  </div>
-                )}
-                <Divider />
-                <ColorPicker
-                  color={
-                    allColors.find((ele) => ele.id === selectedColorId)?.color
-                  }
-                  colors={allColors.map((ele) => ele.color)}
-                  width={3}
-                  onChange={handleColorSelect}
-                />
-                {submited && (
-                  <Typography variant="h3" component="h2">
-                    {feedbackMessage}
-                  </Typography>
-                )}
-                <ThemeToggle
-                  themeState={themeState}
-                  customChangeThemeState={customChangeThemeState}
-                  variant="text"
-                />
-              </CardContent>
-              <CardActions className="cardactions">
-                <Button onClick={navtigateToHome}>Back</Button>
-                {!submited ? (
-                  <>
-                    <Button onClick={handleSkip}>Skip</Button>
-                    <Button
-                      onClick={handleSubmit}
-                      disabled={selectedColorId === -1}
-                    >
-                      Submit
-                    </Button>
-                  </>
+          {isDesktop ? (
+            <Card className="singleplayer" square>
+              <div className="singleplayer-hud-main">
+                {true ? (
+                  <Typography>new high score: 1</Typography>
                 ) : (
-                  <Button onClick={handleNext}>Next</Button>
+                  <>
+                    <Typography>current score: 23</Typography>
+                    <LinearProgress variant="determinate" value={23} />
+                  </>
                 )}
-              </CardActions>
+                <div>
+                  <FavoriteIcon />
+                  <FavoriteIcon />
+                  <FavoriteIcon />
+                  <FavoriteIcon />
+                  <FavoriteIcon />
+                  <FavoriteIcon />
+                </div>
+                <div>
+                  <LightbulbIcon />
+                  <LightbulbIcon />
+                  <LightbulbIcon />
+                </div>
+              </div>
             </Card>
-          </div>
+          ) : (
+            <Card className="singleplayer-phone" square>
+              phone
+            </Card>
+          )}
+
           <CustomSnackbar
             snackbarState={snackbarState}
             changeSnackbarState={changeSnackbarState}

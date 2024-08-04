@@ -1,10 +1,19 @@
-.piechart-container svg g g {
-  transform: translate(25%, 25%);
+/* phone */
+.singleplayer-phone {
+  height: 90dvh;
+  width: 90dvw;
+  padding: 5dvh 5dvw;
 }
-.MuiPieArc-root {
-  stroke: #ffffff;
-  stroke-width: 2;
+/* desktop */
+.singleplayer {
+  height: 80dvh;
+  width: 80dvw;
+  padding: 10dvh 10dvw;
 }
-.MuiPieArcLabel-root {
-  fill: white;
+.singleplayer-hud-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #888888;
+  width: 33%;
 }
